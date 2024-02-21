@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "generate": "drizzle-kit generate:sqlite --config drizzle.config.ts",
-    "drizzle:seed": "tsc ./src/lib/seed.ts"
+    "drizzle:seed": "ts-node ./src/lib/seed.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.4.1",

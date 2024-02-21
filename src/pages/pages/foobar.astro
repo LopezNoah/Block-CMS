@@ -1,0 +1,68 @@
+---
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+let { pageId } = Astro.params;
+const numPageId = Number(pageId || '1');
+
+export type Page = {
+  title: string;
+  description: string;
+  id: number;
+  layout: string;
+}
+
+//Blocks
+import data from "../api/blocks.json";
+let page = data.pages.find(p => p.id === numPageId);
+let blocks = page!.blocks;
+
+blocks.sort((a, b) => {
+  if (a.zone !== b.zone) {
+    return a.zone.localeCompare(b.zone);
+  } else {
+    return a.id - b.id;
+  }
+});
+
+const uniqueZones = [...new Set(blocks.map(block => block.zone))];
+
+//Site layout
+async function findSiteLayout(layout: string) {
+  const siteLayoutFiles = await Astro.glob(`../layouts/*.astro`);
+
+  const siteLayoutFile = siteLayoutFiles.filter(f => {
+      console.log(f.default.name);
+      return f.default.name === page!.layout
+  })[0];
+
+  return siteLayoutFile;
+}
+
+let SiteLayout : AstroComponentFactory;
+const siteLayoutFile = await findSiteLayout(page!.layout);
+
+if (siteLayoutFile) {
+    SiteLayout = siteLayoutFile.default;
+} else {
+        return new Response("<p>oh no!</p>", {
+    headers: { 'Content-Type': 'text/html' }
+    });
+}
+---
+<SiteLayout page={page}>
+    {uniqueZones.map(zone => (
+        <Fragment slot={zone}>
+          <h2>{zone}</h2>
+          {blocks
+            .filter(b => b.zone === zone)
+            .map(block => (
+              <div
+                id={`bid_${block.id}`}
+                hx-get={`/partials/${block.type}?id=${block.id}`}
+                hx-trigger="load"
+                hx-target="this"
+                hx-swap="outerHTML"
+              ></div>
+            ))}
+        </Fragment>
+      ))}
+</SiteLayout>

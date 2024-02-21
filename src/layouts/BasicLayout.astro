@@ -17,7 +17,7 @@ import Zone from "../components/RockZone.astro";
     <slot />
     <Zone name="main">
         {Array.from({ length: 5 }).map((_, index) => (
-          <div hx-get={`/partials/HelloWorld?id=${index + 1}`} hx-trigger="load" hx-swap="this"></div>
+          <div hx-get={`/partials/BlockA?id=${index + 1}`} hx-trigger="load" hx-swap="this"></div>
         ))}
     </Zone>
 </body>

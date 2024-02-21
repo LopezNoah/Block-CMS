@@ -1,0 +1,35 @@
+---
+import { number } from "astro/zod";
+import type { Page } from "../../../lib/models/types";
+
+const possibleLayouts = ["FullWidth"];
+export const partial = true;
+
+interface Props {
+    id: number | undefined;
+    title: string | null | undefined;
+    description: string | null | undefined;
+    layout: string | null | undefined;
+};
+
+const props = Astro.props;
+
+console.log("request", Astro.request.method);
+---
+<form action="/partials/PageEntry" method="post" hx-boost="true">
+    <div class="flex flex-col p-2">
+        <label for="description">Description</label>
+        <input class="p-1 border border-slate-700" name="description" type="text" value={props.description}>
+        
+        <label for="title">Title</label>
+        <input class="p-1 border border-slate-700" name="title" type="text" value={props.title}>
+
+        <label for="layout">Layout</label>
+        <select class="p-1 border border-slate-700" name="layout" value={props.layout}>
+            {possibleLayouts.map(layout => (
+                <option value={layout}>{layout}</option>
+                ))}
+        </select>
+        <input type="submit" value="Submit">
+    </div>
+</form>

@@ -5,10 +5,6 @@ import Database from "better-sqlite3";
 import { db } from "./drizzle.ts";
 import type { BlockInsert, BlockTypeInsert, PageInsert } from "./models/types.ts";
 
-
-if (!("DATABASE_URL" in import.meta.env))
-        throw new Error("DATABASE_URL not found on .env.development");
-
 const zones = [
     "Main", "Navigation", "Header",
     "Section A", "Section B", "Section C", "Section D",
@@ -60,4 +56,4 @@ const main = async () => {
     console.log("Seed done");
 };
 
-main();
+await main();
