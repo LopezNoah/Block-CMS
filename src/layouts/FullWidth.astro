@@ -1,0 +1,100 @@
+---
+import SiteMaster from "./SiteMaster.astro"
+import RockZone from "../components/RockZone.astro"
+
+interface Props {
+    page: Page;
+}
+
+type Page = {
+  title: string;
+  description: string;
+  id: number;
+}
+
+const { page } = Astro.props;
+
+const show = page.id === 45 ? true : false;
+console.log(page);
+console.log("show", show)
+
+---
+<SiteMaster>
+    <Fragment slot="Footer"><slot name="Footer"></slot></Fragment>
+    <Fragment slot="Header"><slot name="Header"></slot></Fragment>
+    <Fragment slot="Login"><slot name="Login"></slot></Fragment>
+    <Fragment slot="Navigation"><slot name="Navigation"></slot></Fragment>
+    <Fragment slot="main">
+        {/* Page Title */}
+        <section id="secPageTitle" class="page-header">
+            <div class="page-title">
+                <h1 class="title">{page.title}</h1>
+            </div>
+            <slot name="Context"></slot>
+        </section>
+            
+        <section id="page-content">
+            
+            {/* Ajax Error */}
+            <div class="alert alert-danger ajax-error no-index" style="display:none">
+                <p><strong>Error</strong></p>
+                <span class="ajax-error-message"></span>
+            </div>
+            
+            <div class="flex">
+                <div class="w-full md:w-12/12">
+                    <RockZone name="Feature">
+                        <slot name="Feature"></slot>
+                    </RockZone>
+                </div>
+            </div>
+            
+            <div class="flex">
+                <div class="w-full md:w-12/12">
+                    <RockZone name="Main">
+                        {show === true && (<slot name="conditional-slot"></slot>)}
+                        <slot name="Main"></slot>
+                    </RockZone>
+                </div>
+            </div>
+            
+            <div class="flex">
+                <div class="w-full md:w-12/12">
+                    <RockZone name="Section A">
+                        <slot name="Section A"></slot>
+                    </RockZone>
+                </div>
+            </div>
+            <div class="flex">
+                <div class="w-full md:w-4/12">
+                    <RockZone name="Section B">
+                        <slot name="Section B">
+                    </RockZone>
+                </div>
+                <div class="w-full md:w-4/12">
+                    <RockZone name="Section C">
+                        <slot name="Section C">
+                    </RockZone>
+                </div>
+                <div class="w-full md:w-4/12">
+                    <RockZone name="Section D">
+                        <slot name="Section D">
+                    </RockZone>
+                </div>
+            </div>
+            
+            <div class="flex">
+                <div class="w-full md:w-6/12">
+                    <RockZone name="Section E">
+                        <slot name="Section E">
+                    </RockZone>
+                </div>
+                <div class="w-full md:w-6/12">
+                    <RockZone name="Section F">
+                        <slot name="Section F">
+                    </RockZone>
+                </div>
+            </div>
+        </section>
+    </Fragment>
+</SiteMaster>

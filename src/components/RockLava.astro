@@ -1,0 +1,10 @@
+---
+interface Props { 
+    lava: string;
+    id: string;
+}
+
+const { lava } = Astro.props;
+//resolve lava after this
+---
+<Fragment set:html={lava} />

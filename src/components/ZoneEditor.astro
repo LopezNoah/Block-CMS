@@ -1,0 +1,13 @@
+---
+import { Code } from "astro/components"
+
+export interface Props {
+	raw: string;
+}
+
+const { raw } = Astro.props;
+
+const html = await Astro.slots.render('default');
+
+---
+<Code code={raw} />

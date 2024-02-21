@@ -1,0 +1,46 @@
+---
+export const partial = true;
+import { Suspense } from 'simple-stack-stream/components';
+import data from '../api/blocks.json';
+const id = Astro.url.searchParams.get('id') || '';
+console.log("in the detail block")
+
+type Block = {
+    id: number;
+    zone: string;
+    text: string;
+    type: string;
+    list?: undefined;
+    parentPageId?: undefined;
+} | {
+    id: number;
+    zone: string;
+    text: string;
+    type: string;
+    list: string[];
+    parentPageId?: undefined;
+} | {
+    id: number;
+    zone: string;
+    text: string;
+    type: string;
+    list?: undefined;
+    parentPageId?: number;
+}
+
+let blocks = data.pages.reduce((acc, page) => 
+    [...acc, ...page.blocks], [] as Block[]);
+
+
+const block = blocks.find(b => b.id === Number(id));
+const text = block?.text;
+let color = Number(id) % 2 == 1 ? 'bg-red-300' : 'bg-blue-300'; 
+
+Astro.response.headers.set('Cache-Control', 'max-age=3600, must-revalidate, public');
+---
+<Suspense>
+    <div id={`bid_${id}`} class=`${color} m-4 p-2 rounded-md border-stone-800 border-2`>
+        <div>This is generated from Id: {id}</div>
+        <div>{ text }</div>
+    </div>
+</Suspense>

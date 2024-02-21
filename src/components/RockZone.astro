@@ -1,0 +1,15 @@
+---
+interface Props {
+    name: string;
+}
+const { name } = Astro.props;
+
+
+
+---
+<div id=`zone-${name}`>
+    <div class="zone-configuration config-bar"></div>
+    <div class="zone-content">
+        <slot/>
+    </div>
+</div>

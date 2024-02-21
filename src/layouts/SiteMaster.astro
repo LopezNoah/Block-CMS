@@ -1,0 +1,77 @@
+---
+import RockLava from "../components/RockLava.astro";
+import RockZone from "../components/RockZone.astro";
+
+import "../styles/theme.css";
+---
+<!doctype html>
+
+<!--
+  _______       _____           _   ____         _______ _             _____ _
+ |__   __|     / ____|         | | |  _ \       |__   __| |           / ____| |
+    | | ___   | |  __  ___   __| | | |_) | ___     | |  | |__   ___  | |  __| | ___  _ __ _   _
+    | |/ _ \  | | |_ |/ _ \ / _` | |  _ < / _ \    | |  | '_ \ / _ \ | | |_ | |/ _ \| '__| | | |
+    | | (_) | | |__| | (_) | (_| | | |_) |  __/    | |  | | | |  __/ | |__| | | (_) | |  | |_| |
+    |_|\___/   \_____|\___/ \__,_| |____/ \___|    |_|  |_| |_|\___|  \_____|_|\___/|_|   \__, |
+                                                                                           __/ |
+                                                                                          |___/
+
+We believe in Jesus Christ as our Lord and Savior, the Son of God. We embrace His virgin birth,
+sinless life, sacrificial death on the cross for our sins, His resurrection from the dead, and
+His promised return. Our faith is steadfast, rooted in the unchanging truth of the Bible, and
+through Christ, we find forgiveness, salvation, and the assurance of eternal life.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+        <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+    </head>
+    <body id="body" hx-ext="head-support">
+        {/* The form isn't need if we're swapping out HTML instead of UpdatePanels
+        <form id="form1">
+            */}
+            <div class="page-wrapper min-h-screen">
+                <nav class="navbar navbar-fixed-top rock-top-header">
+                    <button type="button" class="navbar-toggle navbar-toggle-side-left collapsed" data-toggle="collapse" data-target=".navbar-static-side">
+                        <div class="hamburger-box">
+                            <div class="hamburger-icon"></div>
+                        </div>
+                    </button>
+                    <div id="fixed-header" class="header-content" role="navigation">
+                        <div class="navbar-zone-login">
+                            <RockZone name="Login">
+                                <slot name="Login">
+                            </RockZone>
+                        </div>
+                        <div class="navbar-zone-header">
+                            <RockZone name="Header">
+                                <slot name="Header">
+                            </RockZone>
+                        </div>
+                    </div>
+                </nav>
+                <nav class="navbar-default navbar-static-side" role="navigation">
+                    <RockZone name="Navigation">
+                        <slot name="Navigation">
+                    </RockZone>
+                </nav>
+                <div id="content-wrapper">
+                   <slot name="feature"></slot>
+                    <div class="main-content">
+                        <slot name="main"></slot>
+                        <div class="main-footer">
+                            <RockZone name="Footer">
+                                <slot name="Footer">
+                            </RockZone>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/*
+        </form>
+             */}
+    </body>
+</html>

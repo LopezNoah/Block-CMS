@@ -1,0 +1,24 @@
+---
+import Zone from "../components/RockZone.astro";
+
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro • TodoMVC - Basic Layout Injection</title>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+</head>
+<body hx-ext="head-support">
+    <slot />
+    <Zone name="main">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <div hx-get={`/partials/HelloWorld?id=${index + 1}`} hx-trigger="load" hx-swap="this"></div>
+        ))}
+    </Zone>
+</body>
+</html>

@@ -1,0 +1,51 @@
+---
+import type { AstroInstance } from "astro";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+
+
+/*Test example of rendering Block components from Page */
+
+// fetch block and site data from Page
+// Based on site data, use certain Layout
+// Based on Layout, place blocks in certain areas.
+// We only render blocks they have perms to view
+//      This can probably be solved by not returned the blocks from JSON in the first place?
+//      User perms get checked in backend server, so this is accurate
+
+/*
+const pageData = await fetch("/api/pages/{id}");
+const site = pageData.Site;
+const siteLayout = site.Layout.name;
+const PageLayout = await Astro.glob("/layouts/{siteLayout}.astro")[0]
+
+*/
+
+const siteLayoutName = "FullWidth";
+
+const siteLayoutFiles = await Astro.glob(`../layouts/*.astro`);
+
+const siteLayoutFile = siteLayoutFiles.filter(f => {
+    console.log(f.default.name);
+    return f.default.name === siteLayoutName
+})[0];
+
+let SiteLayout : AstroComponentFactory;
+if (siteLayoutFile) {
+    SiteLayout = siteLayoutFile.default;
+} else {
+        return new Response("<p>oh no!</p>", {
+    headers: { 'Content-Type': 'text/html' }
+    });
+}
+
+const fakePage = {
+    title: "Fake Page",
+    description: "Fake Description",
+    id: 45
+};
+
+---
+<SiteLayout page={fakePage}>
+    <p>Hello world</p>
+    <div slot="conditional-slot">This is only conditional</div>
+</SiteLayout>
