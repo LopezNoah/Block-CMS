@@ -1,0 +1,10 @@
+---
+const { length } = Astro.props
+---
+{() => {
+    if (length === 0) {
+        return (<tr>
+                    <td>There are not blocks in this zone</td>
+                </tr>);
+    }
+}}

@@ -1,0 +1,12 @@
+---
+import { createForm } from "simple:form";
+import z from "zod";
+import BlockForm from "../../../components/Page/BlockForm.astro";
+
+export const blockEntryForm = createForm({
+  blockType: z.string(),
+  zone: z.string(),
+});
+
+---
+<BlockForm {}></BlockForm>

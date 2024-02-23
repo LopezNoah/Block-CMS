@@ -1,0 +1,60 @@
+---
+import { eq, and} from "drizzle-orm";
+import { db } from "../../lib/drizzle";
+import { blocks, blockTypes } from "../../lib/models/schema";
+import { fetchZones } from "../../pages/api/render-layout.ts";
+import EmptyBlockList from "./EmptyBlockList.astro";
+
+interface Props {
+    pageId: number;
+    zone: string;
+}
+
+const { pageId, zone } = Astro.props;
+
+const blockList = await db.select()
+    .from(blocks)
+    .innerJoin(blockTypes, eq(blockTypes.id, blocks.blockTypeId))
+    .where(and(eq(blocks.pageId, pageId), eq(blocks.zone, zone)))
+    .execute();
+
+// This is because if we just import from the route, we would also be importing all of the styles.
+// For some reason, Astro loads in the styles for every import. So we have to be careful.
+const zones = (await (await fetch("http://localhost:4321/api/render-layout")).json()) as string[];
+
+---
+<div id="block-list">
+    <select>
+        {zones.map(zone => (            
+            <option value={zone}>{zone}</option>
+        ))}
+    </select>
+    <table class="table-auto w-full text-sm">
+        <thead>
+            <tr>
+                <th class="p-4 pl-8 pt-0 pb-3 text-left border-b">BlockId</th>
+                <th class="p-4 pt-0 pb-3 text-left border-b">BlockType</th>
+                <th class="p-4 pt-0 pb-3 text-left border-b">Zone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {blockList.map(block => (
+            <tr>
+                <td class="border-b p-4 pl-8">{block.Block.id}</td>
+                <td class="border-b p-4">{block.BlockType.name}</td>
+                <td class="border-b p-4">{block.Block.zone}</td>
+            </tr>
+            ))}
+            {() => {
+                if (blockList.length === 0) {
+                    return (
+                        <tr class="table-row">
+                            <td class="border-b p-4 w-full" colspan="3">There are not blocks in this zone.<button hx-get="/partials/Pages/BlockEntry" hx-swap="outerHTML" hx-target="#block-entry" hx-trigger="click">Add block</button></td>
+                        </tr>
+                    );
+                }
+            }}
+        </tbody>
+    </table>
+    <div id="block-entry"></div>
+</div>

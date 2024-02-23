@@ -3,7 +3,7 @@ export const partial = true;
 import { Suspense } from 'simple-stack-stream/components';
 const id = Astro.url.searchParams.get('id') || '';
 import data from "../api/blocks.json";
-import { type Page } from '../pages/[pageId].astro';
+import { type Page } from '../pages/foobar.astro';
 let blocks = data.pages[0].blocks;
 
 console.log("in the navigation block")

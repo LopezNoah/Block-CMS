@@ -1,12 +1,12 @@
 ---
 import BasicLayout from "../../layouts/BasicLayout.astro";
+import PageForm from "../../components/Page/PageForm.astro";
 import PageList from "../../components/Page/PageList.astro";
 
-//hx-get={`/partials/PageEntry?id=${p.id}`}
 ---
 <BasicLayout>
     <div class="flex">
         <PageList></PageList>
-        <div id="page-outlet"></div>
+        <PageForm id={undefined} title={undefined} description={undefined} layout={undefined}/>
     </div>
 </BasicLayout>

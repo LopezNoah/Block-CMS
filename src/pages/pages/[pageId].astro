@@ -3,8 +3,10 @@ import BasicLayout from "../../layouts/BasicLayout.astro";
 import { type PageInsert } from "../../lib/models/types";
 import { db } from "../../lib/drizzle";
 import { pages } from "../../lib/models/schema";
-import Comp from "../partials/Pages/PageEntry.astro";
+import PageForm from "../../components/Page/PageForm.astro";
 import { eq } from "drizzle-orm";
+import PageList from "../../components/Page/PageList.astro";
+import BlockList from "../../components/Page/BlockList.astro";
 
 const possibleLayouts = ["FullWidth"];
 const { pageId } = Astro.params;
@@ -12,35 +14,13 @@ const request = Astro.request;
 
 const page = (await db.select().from(pages).where(eq(pages.id, Number(pageId || 0))).execute())[0];
 if (page === undefined) {
-    console.log("no page here yet");
-    //We should instead redirect to a list of the pages
-    return Astro.redirect("/");
+    return Astro.redirect("new");
 }
-
-if (request.method === "POST") {
-    //This is a form request and we need to validate/process the data.
-    const formData = await request.formData();  
-
-    const description = formData.get("description");
-    const title = formData.get("title");
-    const layout = formData.get("layout");
-
-    if (typeof description !== "string" || typeof title !== "string" || typeof layout !== "string") {
-        throw new Error("One of the form data values is incorrect");
-    }
-
-    const values: PageInsert = {
-        description, title, layout
-    };
-    
-    db.insert(pages).values(values).execute();
-
-    const realPages = await db.select().from(pages).execute();
-    console.log("pages", realPages);
-}
-
 ---
-
 <BasicLayout>
-    <Comp {...page }/>
+    <div class="flex">
+        <PageList></PageList>
+        <PageForm {...page }/>
+        <BlockList pageId={page.id} zone="main"></BlockList>
+    </div>
 </BasicLayout>
