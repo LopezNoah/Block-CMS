@@ -1,0 +1,33 @@
+---
+import type { Page } from "@lib/models/types.ts";
+
+interface Props extends Partial<Page> {};
+
+const { id, description, title, layout } = Astro.props;
+---
+<div id="page-entry" class="py-16 px-7 rounded-md bg-white border-2 border-gray-700">
+    <div class="grid md:grid-cols-2 grid-cols-1 gap-6">
+        <div>
+            <div class="font-normal text-gray-400 text-lg">Title</div>
+            <div class="w-full rounded-md py-2 px-3">{title}</div>
+        </div>
+
+        <div>
+            <div class="font-normal text-gray-400 text-lg">Layout</div>
+            <div class="w-full rounded-md py-2 px-3">{layout}</div>
+        </div>
+
+        <div>
+            <div class="font-normal text-gray-400 text-lg">PageId</div>
+            <div class="w-full rounded-md py-2 px-3">{id}</div>
+        </div>
+
+        <button
+            hx-get={`/partials/Pages/Detail?mode=edit&id=${id}`}
+            hx-trigger="click"
+            hx-target="#page-entry"
+            hx-swap="outerHMTL">
+            Edit
+        </button>
+    </div>
+</div>

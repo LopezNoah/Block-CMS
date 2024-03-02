@@ -1,0 +1,9 @@
+---
+import BlockList from "@components/Block/List/index.astro";
+
+const searchParams = Astro.url.searchParams;
+const pageIdParam = Number(searchParams.get('pageId') || 0);
+const zoneParam = searchParams.get('zone') || "";
+
+---
+<BlockList pageId={pageIdParam} zone={zoneParam}></BlockList>

@@ -9,18 +9,19 @@
     "preview": "astro preview",
     "astro": "astro",
     "generate": "drizzle-kit generate:sqlite --config drizzle.config.ts",
-    "drizzle:seed": "ts-node ./src/lib/seed.ts"
+    "drizzle:seed": "cross-env NODE_ENV=DEVELOPMENT tsx ./src/lib/seed.ts"
   },
   "dependencies": {
-    "@astrojs/check": "^0.4.1",
-    "@astrojs/node": "^8.2.0",
+    "@astrojs/check": "^0.5.5",
+    "@astrojs/node": "^8.2.1",
     "@astrojs/react": "^3.0.10",
     "@astrojs/tailwind": "^5.1.0",
     "@astrojs/vue": "^4.0.8",
     "@types/react": "^18.2.57",
     "@types/react-dom": "^18.2.19",
-    "astro": "^4.3.2",
+    "astro": "^4.4.4",
     "better-sqlite3": "^9.4.0",
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.29.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -33,6 +34,8 @@
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.9",
-    "drizzle-kit": "^0.20.14"
+    "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.20.14",
+    "tsx": "^4.7.1"
   }
 }

@@ -1,0 +1,30 @@
+---
+
+interface Props {
+    zone: String;
+    blocksList: {
+        id: number;
+        name: string;
+        pageId: number;
+        zone: string;
+        blockTypeId: number;
+    }[]
+}
+
+const { zone, blocksList } = Astro.props;
+console.log("zone", zone)
+---
+<Fragment slot={zone}>
+    <h2>{zone}</h2>
+    {blocksList
+      .filter(b => b.zone === zone)
+      .map(block => (
+        <div
+          id={`bid_${block.id}`}
+          hx-get={`/partials/Blocks/${block.id}`}
+          hx-trigger="load"
+          hx-target="this"
+          hx-swap="outerHTML"
+        >Loading block {block.id}...</div>
+      ))}
+  </Fragment>

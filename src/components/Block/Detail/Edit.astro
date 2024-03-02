@@ -1,0 +1,77 @@
+---
+import { db } from '@lib/drizzle';
+import { blockTypes } from '@lib/models/schema';
+import { createForm } from 'simple-stack-form/module';
+import { z } from 'zod';
+
+export const blockEntryForm = createForm({
+  blockType: z.string(),
+  zone: z.string(),
+  name: z.string()
+});
+
+interface Props {
+    id: number;
+    zone: string;
+    blockType: string;
+    pageId: number;
+    name: string;
+}
+
+const blockTypesQuery = db
+    .select()
+    .from(blockTypes);
+
+const blockTypeList = await blockTypesQuery;
+
+const { id, zone, blockType, pageId, name} = Astro.props;
+
+const zones = (await (await fetch("http://localhost:4321/api/render-layout")).json()) as string[];
+
+---
+<div id="block-entry">
+    <form>
+        <div class="flex flex-col p-2">
+            <input type="hidden" id="id" name="id" value={id}>
+            <div>Id: {id}</div>
+
+            <input type="hidden" id="pageId" name="pageId" value={pageId}>
+            <div>Page Id: {pageId}</div>
+
+            <label for="name">Name</label>
+            <input id="name" 
+                class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-700"
+                {...blockEntryForm.inputProps.name} 
+                value={name}>
+
+            <label for="description">BlockType</label>
+            <select
+                class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-700"
+                id="layout"
+                {...blockEntryForm.inputProps.blockType}
+                value={blockType}>
+                {blockTypeList.map((blockType) => (
+                    <option value={blockType.id}>{blockType.name}</option>
+                    ))}
+            </select>
+            
+            <label for="zone">Zone</label>
+            <select
+                class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-700"
+                id="zone"
+                {...blockEntryForm.inputProps.zone}
+                value={zone}>
+                {zones.map((zone) => (
+                    <option value={zone}>{zone}</option>
+                    ))}
+            </select>
+            
+            <button hx-post="/partials/Blocks/Detail"
+                hx-trigger="click"
+                hx-target="#block-entry"
+                hx-swap="outerHMTL">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>

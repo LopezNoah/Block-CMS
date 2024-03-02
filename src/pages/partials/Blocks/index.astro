@@ -1,0 +1,48 @@
+---
+import ViewMode from "@components/Block/Detail/View.astro";
+import EditMode from "@components/Block/Detail/Edit.astro";
+import { db } from "@lib/drizzle";
+import { blockTypes, blocks } from "@lib/models/schema";
+import { eq } from "drizzle-orm";
+
+const searchParams = Astro.url.searchParams;
+
+const mode = searchParams.get('mode') || "view";
+const idParam = Number(searchParams.get('id') || 0);
+let pageIdParam = Number(searchParams.get('pageId') || 0);
+let zoneParam = searchParams.get('zone') || "";
+
+const block = (await db
+    .select({
+        id: blocks.id,
+        blockType: blockTypes.name,
+        zone: blocks.zone,
+        pageId: blocks.pageId
+    })
+    .from(blocks)
+    .innerJoin(blockTypes, eq(blockTypes.id, blocks.blockTypeId))
+    .where(eq(blocks.id, idParam))
+    )[0];
+
+const request = Astro.request;
+const method = request.method;
+const headers = request.headers;
+
+const htmxRequest = headers.get('HX-Request') === "true";
+
+---
+{() => {
+    switch(method) {
+        case "GET": 
+            break;
+        case "POST":
+            break;
+        case "DELETE":
+            return (<Fragment></Fragment>);
+            break;
+        case "PUT":
+            break;
+        case "PATCH":
+            break;
+    }
+}}

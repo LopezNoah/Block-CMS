@@ -1,0 +1,24 @@
+---
+const request = Astro.request;
+const method = request.method;
+
+---
+{() => {
+    switch(method) {
+        case "GET": 
+            return (<slot name="GET"></slot>);
+            break;
+        case "POST":
+            return (<slot name="POST"></slot>)
+            break;
+        case "DELETE":
+            return (<slot name="DELETE"></slot>)
+            break;
+        case "PUT":
+            return (<slot name="PUT"></slot>)
+            break;
+        case "PATCH":
+            return (<slot name="PATCH"></slot>)
+            break;
+    }
+}}

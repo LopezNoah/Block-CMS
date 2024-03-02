@@ -12,4 +12,16 @@ Each Layout has associated Zones.
 This can be done later and is not the core piece of the project.
 */
 
+import MethodSwitch from "@components/MethodSwitch.astro";
+
+
+
 ---
+
+<MethodSwitch>
+    <Fragment slot="GET">
+        <div>This was a GET request</div>
+    </Fragment>
+    <div slot="POST">This was a POST request</div>
+    <div slot="DELETE">This was a DELETE request</div>
+</MethodSwitch>

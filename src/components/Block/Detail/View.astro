@@ -1,0 +1,29 @@
+---
+interface Props {
+    id: number;
+    zone: string;
+    blockType: string;
+    pageId: number;
+}
+
+const { id, zone, blockType, pageId } = Astro.props;
+---
+<div id="block-entry">
+    <div class="flex flex-col p-2">
+        <div>BlockType</div>
+        <div>{blockType}</div>
+
+        <div>Zone</div>
+        <div>{zone}</div>
+
+        <div>PageId</div>
+        <div>{pageId}</div>
+
+        <button hx-get="/partials/Blocks/Detail?mode=edit"
+            hx-trigger="click"
+            hx-target="#block-entry"
+            hx-swap="outerHMTL">
+            Submit
+        </button>
+    </div>
+</div>

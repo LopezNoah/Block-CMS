@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "8473a0ee-ad73-49f2-8e21-744ffe0fc220",
+  "id": "1afb07a6-2aee-41a9-972e-b0b69e05193f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "BlockType": {
@@ -37,11 +37,18 @@
           "notNull": true,
           "autoincrement": true
         },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "pageId": {
           "name": "pageId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "zone": {
@@ -55,7 +62,7 @@
           "name": "blockTypeId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         }
       },
@@ -112,14 +119,14 @@
           "name": "layout",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "title": {
           "name": "title",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         }
       },

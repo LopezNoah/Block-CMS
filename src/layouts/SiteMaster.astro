@@ -1,5 +1,4 @@
 ---
-import RockLava from "../components/RockLava.astro";
 import RockZone from "../components/RockZone.astro";
 
 import "../styles/theme.css";
@@ -30,48 +29,42 @@ through Christ, we find forgiveness, salvation, and the assurance of eternal lif
         <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     </head>
     <body id="body" hx-ext="head-support">
-        {/* The form isn't need if we're swapping out HTML instead of UpdatePanels
-        <form id="form1">
-            */}
-            <div class="page-wrapper min-h-screen">
-                <nav class="navbar navbar-fixed-top rock-top-header">
-                    <button type="button" class="navbar-toggle navbar-toggle-side-left collapsed" data-toggle="collapse" data-target=".navbar-static-side">
-                        <div class="hamburger-box">
-                            <div class="hamburger-icon"></div>
-                        </div>
-                    </button>
-                    <div id="fixed-header" class="header-content" role="navigation">
-                        <div class="navbar-zone-login">
-                            <RockZone name="Login">
-                                <slot name="Login">
-                            </RockZone>
-                        </div>
-                        <div class="navbar-zone-header">
-                            <RockZone name="Header">
-                                <slot name="Header">
-                            </RockZone>
-                        </div>
+        <div class="page-wrapper min-h-screen">
+            <nav class="navbar navbar-fixed-top rock-top-header">
+                <button type="button" class="navbar-toggle navbar-toggle-side-left collapsed" data-toggle="collapse" data-target=".navbar-static-side">
+                    <div class="hamburger-box">
+                        <div class="hamburger-icon"></div>
                     </div>
-                </nav>
-                <nav class="navbar-default navbar-static-side" role="navigation">
-                    <RockZone name="Navigation">
-                        <slot name="Navigation">
-                    </RockZone>
-                </nav>
-                <div id="content-wrapper">
-                   <slot name="feature"></slot>
-                    <div class="main-content">
-                        <slot name="main"></slot>
-                        <div class="main-footer">
-                            <RockZone name="Footer">
-                                <slot name="Footer">
-                            </RockZone>
-                        </div>
+                </button>
+                <div id="fixed-header" class="header-content" role="navigation">
+                    <div class="navbar-zone-login">
+                        <RockZone name="Login">
+                            <slot name="Login">
+                        </RockZone>
+                    </div>
+                    <div class="navbar-zone-header">
+                        <RockZone name="Header">
+                            <slot name="Header">
+                        </RockZone>
+                    </div>
+                </div>
+            </nav>
+            <nav class="navbar-default navbar-static-side" role="navigation">
+                <RockZone name="Navigation">
+                    <slot name="Navigation">
+                </RockZone>
+            </nav>
+            <div id="content-wrapper">
+                <slot name="feature"></slot>
+                <div class="main-content">
+                    <slot name="main"></slot>
+                    <div class="main-footer">
+                        <RockZone name="Footer">
+                            <slot name="Footer">
+                        </RockZone>
                     </div>
                 </div>
             </div>
-            {/*
-        </form>
-             */}
+        </div>
     </body>
 </html>

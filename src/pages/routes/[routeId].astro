@@ -1,4 +1,51 @@
 ---
+import { db } from "@lib/drizzle";
+import { blocks, pages } from "@lib/models/schema";
+import { eq } from "drizzle-orm";
+import FullWidth from "src/layouts/FullWidth.astro";
+import { Suspense } from 'simple-stack-stream/components';
+import ZoneLoader from "./_zoneLoader.astro";
+
 const { routeId } = Astro.params;
 
+if (routeId === undefined) {
+    throw new Error("Route Id cannot be undefined");
+}
+
+const routeIdParam = Number(routeId);
+
+const pageQuery = db
+    .select()
+    .from(pages)
+    .where(eq(pages.id, routeIdParam))
+
+const page = (await pageQuery)[0];
+
+const blockQuery = db
+    .select()
+    .from(blocks)
+    .where(eq(blocks.pageId, page.id));
+
+const blocksList = await blockQuery;
+//const zones = (await (await fetch("http://localhost:4321/api/render-layout")).json()) as string[];
+//console.log("these are the zones", zones);
+
+const zones = [
+  "Footer", "Header", "Login", "Navigation", "Feature", "Main", "Section A", "Section B",
+  "Section C", "Section D", "Section E", "Section F"
+];
 ---
+<FullWidth page={page}>
+    <ZoneLoader zone="Footer" blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone={"Header"} blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone={"Login"} blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone={"Navigation"} blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone={"Feature"} blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone="Main" blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone="Section A" blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone={"Section B"} blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone={"Section C"} blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone={"Section D"} blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone={"Section E"} blocksList={blocksList}></ZoneLoader>
+    <ZoneLoader zone={"Section F"} blocksList={blocksList}></ZoneLoader>
+</FullWidth>

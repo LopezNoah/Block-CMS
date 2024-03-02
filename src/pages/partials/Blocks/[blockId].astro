@@ -1,0 +1,27 @@
+---
+import { db } from "@lib/drizzle";
+import { blockTypes, blocks } from "@lib/models/schema";
+import { eq } from "drizzle-orm";
+
+const { blockId } = Astro.params;
+const blockIdParam = Number(blockId);
+
+const blockQuery = (id: number) => db
+    .select({
+        id: blocks.id,
+        blockType: blockTypes.name,
+        zone: blocks.zone,
+        pageId: blocks.pageId
+    })
+    .from(blocks)
+    .innerJoin(blockTypes, eq(blockTypes.id, blocks.blockTypeId))
+    .where(eq(blocks.id, id))
+
+const blockList = await blockQuery(blockIdParam);
+
+if (blockList.length !== 1) {
+    throw new Error("Block could not be found");
+}
+const block = blockList[0];
+---
+<div id=`bid_${block.id}`>{JSON.stringify(block)}</div>

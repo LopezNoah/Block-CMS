@@ -1,15 +1,10 @@
 ---
 import SiteMaster from "./SiteMaster.astro"
 import RockZone from "../components/RockZone.astro"
+import type { Page } from "@lib/models/types";
 
 interface Props {
     page: Page;
-}
-
-type Page = {
-  title: string;
-  description: string;
-  id: number;
 }
 
 const { page } = Astro.props;
@@ -52,7 +47,7 @@ console.log("show", show)
             <div class="flex">
                 <div class="w-full md:w-12/12">
                     <RockZone name="Main">
-                        {show === true && (<slot name="conditional-slot"></slot>)}
+                        <!-- {show === true && (<slot name="conditional-slot"></slot>)} -->
                         <slot name="Main"></slot>
                     </RockZone>
                 </div>

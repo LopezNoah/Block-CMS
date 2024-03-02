@@ -2,8 +2,11 @@
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import * as models from "./models/schema.ts";
 import Database from "better-sqlite3";
-import { db } from "./drizzle.ts";
-import type { BlockInsert, BlockTypeInsert, PageInsert } from "./models/types.ts";
+// import { db } from "./drizzle.ts";
+import * as schema from '@lib/models/schema.ts';
+import type { BlockTypeInsert } from "./models/types.ts";
+import * as dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
 
 const zones = [
     "Main", "Navigation", "Header",
@@ -19,41 +22,24 @@ const layouts = [
 ];
 
 const main = async () => {
+    const sqlite = new Database(
+        process.env.PROD ? '/data/main.db' : './main.db'
+    );
+      
+    const db = drizzle(sqlite, { schema });
+
     console.log("Seed start");
     const blockTypes: BlockTypeInsert[] = [];
-    const pages: PageInsert[] = [];
-    const blocks: BlockInsert[] = [];
 
-    for (let i = 0; i < 200; i++) {
-        pages.push({
-            description: "Description",
-            layout: "FullWidth",
-            title: `Page ${i}`
-        });
-    }
-    await db.insert(models.pages).values(pages);
-    console.log("Pushed Page data");
-
-    blockTypes.push({ name: "Block 1" });
-    blockTypes.push({ name: "Block 2" });
-    blockTypes.push({ name: "Block 3" });
-    blockTypes.push({ name: "Block 4" });
-    blockTypes.push({ name: "Block 5" });
+    blockTypes.push({ name: "BlockType 1" });
+    blockTypes.push({ name: "BlockType 2" });
+    blockTypes.push({ name: "BlockType 3" });
+    blockTypes.push({ name: "BlockType 4" });
+    blockTypes.push({ name: "BlockType 5" });
     await db.insert(models.blockTypes).values(blockTypes);
     console.log("Pushed BlockType data");
 
-    const zoneLength = zones.length - 1;
-
-    for (let i = 0; i < 400; i++) {
-        blocks.push({
-            zone: zones[i % zoneLength],
-            pageId: pages[i % 200].id,
-            blockTypeId: blockTypes[i % 5].id
-        });
-    }
-    await db.insert(models.blocks).values(blocks);
-    console.log("Pushed Blocks data");
     console.log("Seed done");
 };
 
-await main();
+main();

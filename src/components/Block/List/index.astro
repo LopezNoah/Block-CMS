@@ -1,0 +1,73 @@
+---
+import { eq, and} from "drizzle-orm";
+import { db } from "@lib/drizzle";
+import { blocks, blockTypes } from "@lib/models/schema";
+
+interface Props {
+    pageId: number;
+    zone: string;
+}
+
+const { pageId, zone } = Astro.props;
+
+const blockListQuery = (pageId: number, zone: string) => db
+    .select({
+        id: blocks.id,
+        blockType: blockTypes.name,
+        zone: blocks.zone,
+        name: blocks.name,
+        pageId: blocks.pageId
+    })
+    .from(blocks)
+    .innerJoin(blockTypes, eq(blockTypes.id, blocks.blockTypeId))
+    .where(and(eq(blocks.pageId, pageId), eq(blocks.zone, zone)));
+
+const blockList = await blockListQuery(pageId, zone);
+
+// This is because if we just import from the route, we would also be importing all of the styles.
+// For some reason, Astro loads in the styles for every import. So we have to be careful.
+const zones = (await (await fetch("http://localhost:4321/api/render-layout")).json()) as string[];
+
+---
+<div id="block-list">
+    <select>
+        {zones.map(zone => (            
+            <option value={zone}>{zone}</option>
+        ))}
+    </select>
+    <button hx-get={`/partials/Blocks/Detail?pageId=${pageId}&zone=${zone}`}
+        hx-swap="outerHTML"
+        class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
+        hx-target="#block-entry"
+        hx-trigger="click">Add block
+    </button>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+        <thead class="text-left">
+            <tr>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Name</th>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">BlockType</th>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Zone</th>
+            <th class="px-4 py-2"></th>
+            </tr>
+        </thead>
+    
+        <tbody class="divide-y divide-gray-200">
+            {blockList.map(b => (
+                <tr>
+                    <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{b.name}</td>
+                    <td class="whitespace-nowrap px-4 py-2 text-gray-700">{b.blockType}</td>
+                    <td class="whitespace-nowrap px-4 py-2 text-gray-700">{b.zone}</td>
+                    <td class="whitespace-nowrap px-4 py-2">
+                        <a href="#"
+                            class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700">
+                        View
+                        </a>
+                    </td>
+                </tr>
+            ))}
+        </tbody>
+        </table>
+    </div>
+    <div id="block-entry"></div>
+</div>

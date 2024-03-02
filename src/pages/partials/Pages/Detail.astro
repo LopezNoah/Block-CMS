@@ -1,0 +1,74 @@
+---
+export const partial = true;
+import ViewMode from "@components/Page/Detail/View.astro";
+import EditMode from "@components/Page/Detail/Edit.astro";
+import { db } from "@lib/drizzle";
+import { pages } from "@lib/models/schema";
+import { eq } from "drizzle-orm";
+import type { PageInsert, Page } from "@lib/models/types";
+import { createForm } from "simple-stack-form/module";
+import { z } from "zod";
+
+const searchParams = Astro.url.searchParams;
+
+const mode = searchParams.get('mode') || "view";
+const idParam = Number(searchParams.get('id') || 0);
+
+const pageQuery = (id: number) => db
+    .select()
+    .from(pages)
+    .where(eq(pages.id, id));
+
+const insertPageQuery = (values: PageInsert) => db
+    .insert(pages)
+    .values(values)
+    .returning();
+
+const page = (await pageQuery(idParam))[0];
+let newPage: Page | undefined;
+
+const request = Astro.request;
+const method = request.method;
+const headers = request.headers;
+
+const htmxRequest = headers.get('HX-Request') === "true";
+export const pageEntryForm = createForm({
+    description: z.string().optional(),
+    layout: z.string(),
+    title: z.string(),
+    id: z.number().optional()
+});
+
+const res = await Astro.locals.form.getData(pageEntryForm);
+
+if (method === "POST" && htmxRequest && res !== undefined) {
+    if (res.fieldErrors !== undefined) {
+        console.log(JSON.stringify(res.fieldErrors));
+        console.log(res.data);
+        throw new Error(JSON.stringify(res.fieldErrors));
+    }
+
+    if (res.data === undefined) {
+        throw new Error("Data was undefined");
+    }
+
+    const values: PageInsert = {
+        title: res.data.title,
+        description: res.data.description,
+        layout: res.data.layout,
+        id: res.data.id === 0 ? undefined : res.data.id
+    };
+
+    let newPage = (await insertPageQuery(values))[0];
+}
+
+const isViewMode = page !== undefined && mode === "view";
+const pageProps = isViewMode ?
+    (newPage !== undefined ? newPage : page) :
+    (page || { id: 0, description: "", layout: "", title: "" })
+---
+{() => {
+    return isViewMode ?
+        (<ViewMode {...pageProps}></ViewMode>) :
+        (<EditMode {...pageProps}></EditMode>)
+}}

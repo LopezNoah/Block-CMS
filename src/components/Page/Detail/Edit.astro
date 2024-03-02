@@ -1,0 +1,55 @@
+---
+import type { Page } from "@lib/models/types.ts";
+import { createForm } from "simple-stack-form/module";
+import { z } from "zod";
+import { pageEntryForm } from "src/pages/partials/Pages/Detail.astro";
+interface Props extends Partial<Page> {};
+
+const props = Astro.props;
+const possibleLayouts = ["FullWidth"];
+---
+<div id="page-entry">
+    <form class="py-16 px-7 rounded-md bg-white">
+        <div class="grid md:grid-cols-2 grid-cols-1 gap-6">
+            <input type="hidden" name="id" value={props.id || 0}>
+            <input
+                class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-700"
+                id="description"
+                placeholder="Description"
+                {...pageEntryForm.inputProps.description}
+                value={props.description}
+            />
+
+            <input
+                class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-700"
+                id="title"
+                placeholder="Page Title"
+                {...pageEntryForm.inputProps.title}
+                value={props.title}
+            />
+
+            <div class="md:col-span-2">
+                <label for="layout" class="float-left block font-normal text-gray-400 text-lg">Layout</label>
+                <select
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-700"
+                    id="layout"
+                    {...pageEntryForm.inputProps.layout}
+                    value={props.layout}>
+                    {possibleLayouts.map((layout) => (
+                        <option value={layout}>{layout}</option>
+                        ))}
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <button
+                    class="py-3 text-base font-medium rounded text-white bg-blue-800 w-full hover:bg-blue-700 transition duration-300"
+                    hx-post="/partials/Pages/Detail?mode=edit"
+                    hx-trigger="click"
+                    hx-target="#page-entry"
+                    hx-swap="outerHMTL">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

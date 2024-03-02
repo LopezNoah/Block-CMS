@@ -4,7 +4,7 @@ import * as schema from './models/schema.ts';
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 
 const sqlite = new Database(
-  import.meta.env.PROD ? '/data/db.sqlite3' : './db.sqlite3'
+  import.meta.env.PROD ? '/data/main.db' : './main.db'
 );
 
 export const db = drizzle(sqlite, { schema });

@@ -1,0 +1,42 @@
+---
+import PageList from "@components/Page/List/index.astro";
+import { db } from "@lib/drizzle";
+import { pages } from "@lib/models/schema";
+import { eq } from "drizzle-orm";
+
+const request = Astro.request;
+const method = request.method;
+const headers = request.headers;
+
+const htmxRequest = headers.get('HX-Request') === "true";
+
+const searchParams = Astro.url.searchParams;
+const id = searchParams.get('id') ?? undefined;
+
+const deletePageQuery = (id: number) => db
+    .delete(pages)
+    .where(eq(pages.id, id));
+
+if (id === undefined) {
+    throw new Error("No id for the request");
+}
+
+if (method === "DELETE" && htmxRequest) {
+    await deletePageQuery(Number(id));
+}
+---
+{() => {
+    switch(method) {
+        case "GET": 
+            break;
+        case "POST":
+            break;
+        case "DELETE":
+            return (<Fragment></Fragment>);
+            break;
+        case "PUT":
+            break;
+        case "PATCH":
+            break;
+    }
+}}

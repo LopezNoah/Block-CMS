@@ -10,15 +10,16 @@ const users = sqliteTable('users', {
 export const pages = sqliteTable('Page', {
     id: integer('id').primaryKey({ autoIncrement: true}),
     description: text('description'),
-    layout: text('layout'),
-    title: text('title'),
+    layout: text('layout').notNull(),
+    title: text('title').notNull(),
   });
   
 export const blocks = sqliteTable('Block', {
   id: integer('id').primaryKey({ autoIncrement: true}),
-  pageId: integer('pageId').references(() => pages.id),
+  name: text('name').notNull(),
+  pageId: integer('pageId').references(() => pages.id).notNull(),
   zone: text('zone').notNull(),
-  blockTypeId: integer('blockTypeId').references(() => blockTypes.id)
+  blockTypeId: integer('blockTypeId').references(() => blockTypes.id).notNull()
 });
 
 export const blockTypes = sqliteTable('BlockType', {

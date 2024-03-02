@@ -1,0 +1,39 @@
+---
+import BasicLayout from "../../../layouts/BasicLayout.astro";
+import { db } from "@lib/drizzle";
+import { pages } from "@lib/models/schema";
+import PageDetail from "@components/Page/Detail/View.astro";
+import { eq } from "drizzle-orm";
+import PageList from "@components/Page/List/index.astro";
+import BlockList from "@components/Block/List/index.astro";
+
+const possibleLayouts = ["FullWidth"];
+const { pageId } = Astro.params;
+const request = Astro.request;
+
+const pageQuery = (pageId: number) => db
+    .select()
+    .from(pages)
+    .where(eq(pages.id, pageId))
+
+const pageIdParam = parseInt(pageId || "");
+
+if (typeof pageIdParam !== "number" || pageIdParam === 0) {
+    return Astro.redirect("/pages/new");
+}
+
+const page = (await pageQuery(pageIdParam))[0];
+
+if (page === undefined) {
+    return Astro.redirect("/pages/new");
+}
+---
+<BasicLayout>
+    <div class="flex">
+        <PageList></PageList>
+        <div class="w-full md:w-[calc(100%-16rem)] md:ml-64">
+            <PageDetail {...page }/>
+            <BlockList pageId={page.id} zone="main"></BlockList>
+        </div>
+    </div>
+</BasicLayout>
