@@ -11,7 +11,7 @@ This dynamicism meant that as long as there exists an endpoint with the componen
 
 ## Improvements
 There are improvements that would be great to have:
-- Layouts being defined in the database
+- Layouts being defined in the database (They currently are being read from the file system)
 - Zones being defined in the database
 - Caching HTMX requests for blocks
 - The ability to create Blocks in the UI
